@@ -1,0 +1,15 @@
+---
+
+k3s_cluster:
+  hosts:
+    k3s-clusterv2:
+      ansible_user: root
+      ansible_host: k3s-clusterv2.vms.st0rmingbr4in.lan
+      ansible_python_interpreter: /usr/bin/python3
+    k3s-clusterv2-node1:
+      ansible_user: root
+      ansible_host: k3s-clusterv2-node1.vms.st0rmingbr4in.lan
+      ansible_python_interpreter: /usr/bin/python3
+  vars:
+    k3s_state: installed
+    k3s_release_version: v1.27.4+k3s1
