@@ -1,0 +1,28 @@
+VENV_PATH := venv
+
+PLAYBOOK_NAME := cluster.yml
+
+ANSIBLE_BIN := $(VENV_PATH)/bin/ansible-playbook
+ANSIBLE_OPTIONS := -i inventory.yml --become --flush-cache --diff
+
+all:
+	@echo "type 'make cluster' to deploy the cluser"
+
+$(VENV_PATH)/bin/pip:
+	virtualenv $(VENV_PATH)
+
+$(VENV_PATH)/bin/ansible-playbook: $(VENV_PATH)/bin/pip
+	"$<" install ansible==9.2.0
+	$(VENV_PATH)/bin/ansible-galaxy role install xanmanning.k3s
+
+ansible-config:
+	export ANSIBLE_ENABLE_TASK_DEBUGGER=True
+
+cluster: $(VENV_PATH)/bin/ansible-playbook ansible-config
+	ANSIBLE_STRATEGY=linear "$<" $(ANSIBLE_OPTIONS) $(PLAYBOOK_NAME) -l k3s-clusterv2-node3
+
+clean:
+	rm -rfI $(VENV_PATH)
+
+.PHONY: all ansible-config cluster clean
+

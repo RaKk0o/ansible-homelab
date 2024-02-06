@@ -1,0 +1,14 @@
+---
+
+- name: Set hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: Install base packages
+  package:
+    name:
+      - vim
+      - htop
+      - curl
+      - open-iscsi
+      - nfs-common
