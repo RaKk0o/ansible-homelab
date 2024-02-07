@@ -12,3 +12,4 @@
       - curl
       - open-iscsi
       - nfs-common
+    use: apt

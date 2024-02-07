@@ -2,13 +2,26 @@
 
 - hosts: k3s_cluster
   any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
+  gather_facts: yes
   roles:
     - { role: common, tags: ['common'] }    
     - { role: ssh, tags: ['ssh'] }    
 
 - name: Build a cluster with a single control node
   hosts: k3s_cluster
+  gather_facts: yes
   vars:
     k3s_become: true
+  pre_tasks:
+    - name: Collect only facts returned by facter
+      ansible.builtin.setup:
+      #  - name: Set each server to be a control node
+      #    ansible.builtin.set_fact:
+      #      k3s_control_node: true
+      #    when: inventory_hostname in ['k3s-clusterv2-server1']
+      #  - name: Set each agent to be a control node
+      #    ansible.builtin.set_fact:
+      #      k3s_control_node: false
+      #    when: inventory_hostname in ['k3s-clusterv2-node1', 'k3s-clusterv2-node3']
   roles:
     - role: xanmanning.k3s
